@@ -1,9 +1,9 @@
-import numpy as np 
 from googlenet import googlenet
 from alexnet import alexnet
-import pyautogui 
 from PIL import ImageGrab
 from PIL import Image
+import numpy as np 
+import pyautogui 
 import cv2
 import time
 import random 
@@ -17,6 +17,7 @@ A =   [0,1,0,0,0]
 S =   [0,0,1,0,0]
 D =   [0,0,0,1,0]
 NK =  [0,0,0,0,1]
+#Used because CNN responds to quickly to be natural
 DELAY_FACTOR = 0.2
 
 def w(): 
@@ -24,12 +25,16 @@ def w():
     pyautogui.keyUp('d')
     pyautogui.keyUp('a')
     pyautogui.keyUp('s')
+
 def s(): 
     pyautogui.keyDown('s')
     pyautogui.keyUp('d')
     pyautogui.keyUp('a')
     pyautogui.keyUp('w')
+
 def a(): 
+    #Random mutation to move forward while 'a' is pressed
+    #Helps with movement by CNN
     if random.randrange(0,3) == 1:
         pyautogui.keyDown('w')
     else:
@@ -49,7 +54,6 @@ def d():
     pyautogui.keyUp('s')
     pyautogui.keyUp('a')
 
-
 def nk():
     if random.randrange(0,3) == 1:
         pyautogui.keyDown('w')
@@ -63,8 +67,7 @@ def nk():
     pyautogui.keyUp('d')
     pyautogui.keyUp('s')
 
-
-#Model Params
+#Model Parameters
 WIDTH = 200
 HEIGHT = 150
 EPOCHS = 3
@@ -81,7 +84,6 @@ LR_Y = UL_Y+600
 
 paused = False 
 while(True):
-
     if not paused: 
         img = ImageGrab.grab(bbox=(UL_X,UL_Y, LR_X, LR_Y))
         img = np.array(img)
@@ -91,10 +93,11 @@ while(True):
         img = scipy.misc.imresize(img, [150,200])
 
         prediction = model.predict([img.reshape(WIDTH, HEIGHT, 3)])[0]
+        #np.array is smoothing coefficients to help with smoother state transitions
         prediction = np.array(prediction) * np.array([4.5, 0.1, 0.1, 0.1, 0.2])
 
+        #Thresholding cutoffs for predictions
         minIndex = np.argmax(prediction)
-  
         turn_thresh = 1
         fwd_thresh = 0.7
         if(minIndex == 0):
@@ -113,7 +116,7 @@ while(True):
             print("no Key")
             nk()
 
-
+    #Press T to pause CNN and reposition car if neccessary 
     if(win32api.GetAsyncKeyState(ord('T'))):
         print("CNN Paused")
         if paused:

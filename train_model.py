@@ -6,12 +6,10 @@ from googlenet import googlenet
 
 # Training Parameters
 learning_rate = 0.001
-
 WIDTH = 200
 HEIGHT = 150
 EPOCHS = 100
 MODEL_NAME = "jatln-v0.3"
-
 
 f = h5py.File("wasd_training_data.hdf5", "r")
 print("File loaded")
@@ -24,11 +22,10 @@ for dataset in f.keys():
 DATASET_COUNTER = int(DATASET_COUNTER/2) 
 
 for i in range(EPOCHS):
-
     for counter in range(DATASET_COUNTER):
+        #HDF5 data is stored as dataset_#_X or dataset_#_Y
         label_X = "dataset" + str(counter) + "_X"
         label_Y = "dataset" + str(counter) + "_Y"
-
 
         data_X = np.array(f[label_X])
         data_Y = np.array(f[label_Y])

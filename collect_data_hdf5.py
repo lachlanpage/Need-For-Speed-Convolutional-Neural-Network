@@ -1,6 +1,4 @@
-#Simple script to collect the training data used for the neural network 
-
-
+#Collect CNN data using HDF5 format
 from PIL import ImageGrab
 from PIL import Image
 import numpy as np
@@ -9,7 +7,6 @@ import cv2
 import time
 import win32api
 import scipy.misc
-
 
 #Key Presses Available 
 W =   [1,0,0,0,0]
@@ -22,10 +19,8 @@ def key_check():
     #Returns the appropriate key list 
     if(win32api.GetAsyncKeyState(ord('W'))):
         return W 
-
     elif(win32api.GetAsyncKeyState(ord('A'))):
         return A 
-
     elif(win32api.GetAsyncKeyState(ord('S'))):
         return S 
     elif(win32api.GetAsyncKeyState(ord('D'))):
@@ -36,9 +31,6 @@ def key_check():
         return 'U'
     else:
         return NK 
-
-
-#Countdown to get environment set up before running
 
 def save_data(balanced_data):
     X_data = []
@@ -55,7 +47,6 @@ def save_data(balanced_data):
         DATASET_COUNTER+=1
 
     DATASET_COUNTER = int(DATASET_COUNTER/2)
-
     label_X = "dataset" + str(DATASET_COUNTER) + "_X"
     label_Y = "dataset" + str(DATASET_COUNTER) + "_Y"
 
@@ -65,7 +56,6 @@ def save_data(balanced_data):
     dsetY = f.create_dataset(label_Y, data = Y_data)
                 
     f.close()
-
     print("file saved")
 
 def balance_data(unbalanced_data):
@@ -103,7 +93,7 @@ def balance_data(unbalanced_data):
 
     return final_data
 
-
+#Countdown to get environment set up before running :) 
 def start_countdown():
     COUNTDOWN_LENGTH = 5
     for i in range(COUNTDOWN_LENGTH):
@@ -114,12 +104,10 @@ training_data = []
 
 WIDTH = 800 
 HEIGHT = 600
-
 file_exists = False
 #ImageGrab Coordinates 
 UL_X = 3
 UL_Y = 26
-
 LR_X = UL_X+800
 LR_Y = UL_Y+600
 
@@ -135,25 +123,27 @@ while(True):
     img = scipy.misc.imresize(img, [150,200])
 
     key_pressed = key_check()
-
     if(key_pressed != 'P' and key_pressed != 'U' and key_pressed!=NK):
-
+        #Append key presses
         IMG_LIST.append(img)
         KEY_PRESSED_LIST.append(key_pressed)
         training_data.append([img, key_pressed])
         print(len(training_data))
+
+        #Save data every 25,000 training samples collected
         if(len(training_data) % 25000 == 0):
             print("saving data")
             print("Balancing Data") 
+
             now = time.time()
             balanced_data = balance_data(training_data)
             finished_time = time.time()
+
             print("Data Balanced")
             print ("time taken: " + str(finished_time - now))
             print(len(balanced_data))
 
             save_data(balanced_data)
-
             training_data.clear()
     else: 
         paused = True

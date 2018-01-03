@@ -1,6 +1,3 @@
-
-
-
 # -*- coding: utf-8 -*-
 
 """ GoogLeNet.
@@ -13,8 +10,6 @@ Links:
     - [GoogLeNet Paper](http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Szegedy_Going_Deeper_With_2015_CVPR_paper.pdf)
     - [Flower Dataset (17)](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/)
 """
-
-
 import tflearn
 import tensorflow as tf 
 from tflearn.layers.core import input_data, dropout, fully_connected
@@ -22,7 +17,6 @@ from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
 from tflearn.layers.normalization import local_response_normalization
 from tflearn.layers.merge_ops import merge
 from tflearn.layers.estimator import regression
-
 
 def googlenet(WIDTH, HEIGHT, LEARNING_RATE, OUTPUT = 5 ):
 
